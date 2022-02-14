@@ -1,5 +1,5 @@
 import sys, os
-import collections
+from collections.abc import Mapping
 import io
 from pathlib import Path
 
