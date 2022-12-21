@@ -1,25 +1,14 @@
-# -*- coding: utf-8 -*-
-
-from __future__ import unicode_literals
-from builtins import str
-
-import os
-import sys
+import sys, os
+import collections
 import io
+from pathlib import Path
+
 import tomlkit
-from past.builtins import xrange
-
-from castervoice.lib import printer
-from castervoice.lib import version
-from castervoice.lib.util import guidance
-
 from appdirs import *
 
-import six
-if six.PY2:
-    from castervoice.lib.util.pathlib import Path
-else:
-    from pathlib import Path  # pylint: disable=import-error
+from pathlib import Path  # pylint: disable=import-error
+from castervoice.lib import printer, version
+from castervoice.lib.util import guidance
 
 try:
     from collections.abc import Mapping
@@ -122,10 +111,7 @@ def _find_natspeak():
     '''
 
     try:
-        if six.PY2:
-            import _winreg as winreg
-        else:
-            import winreg
+        import winreg
     except ImportError:
         printer.out("Could not import winreg")
         return ""
@@ -148,7 +134,7 @@ def _find_natspeak():
         key = winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE,
                              "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall",
                              0, winreg.KEY_READ | arch_key)
-        for i in xrange(0, winreg.QueryInfoKey(key)[0]):
+        for i in range(0, winreg.QueryInfoKey(key)[0]):
             skey_name = winreg.EnumKey(key, i)
             skey = winreg.OpenKey(key, skey_name)
             DisplayName, Publisher, DisplayVersion, InstallLocation = 'null'
