@@ -19,6 +19,7 @@ echo Next line should clearly state python version:
 python --version
 
 echo Using this python/pip:
+
 py -%python_version% -m pip install --upgrade pip
 
 echo Installing Caster Dependencies for DNS/WSR
