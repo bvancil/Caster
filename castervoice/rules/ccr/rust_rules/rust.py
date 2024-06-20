@@ -1,3 +1,4 @@
+from symtable import Symbol
 from dragonfly import Choice, ShortIntegerRef
 
 from castervoice.rules.core.alphabet_rules import alphabet_support # Manually change import path if in user directory.
@@ -15,9 +16,9 @@ class Rust(MergeRule):
 
     mapping = {
         SymbolSpecs.IF:
-            R(Text("if  {}") + Key("left/5:3")),
+            R(Text("if ")),
         SymbolSpecs.ELSE:
-            R(Text("else {}") + Key("left/5:3")),
+            R(Text("else ")),
         #
         SymbolSpecs.SWITCH:
             R(Text("match ")),
@@ -29,13 +30,14 @@ class Rust(MergeRule):
             R(Text("_")),
         #
         SymbolSpecs.DO_LOOP:
-            R(Text("while {TOKEN;TOKEN}{}")),
+            R(Text("loop ")),
         SymbolSpecs.WHILE_LOOP:
-            R(Text("while TOKEN {}") + Key("left")),
-        "for loop [of <a> [in <n>]]":
-            R(Text("for %(a)s in 0..%(n)d {}") + Key("left")),
+            R(Text("while ")),
+        SymbolSpecs.FOR_LOOP:
+            R(Text("for ")),
+        "in": R(Text("in ")),
         SymbolSpecs.FOR_EACH_LOOP:
-            R(Text("for TOKEN in TOKEN {}") + Key("left")),
+            R(Text("for ")),
         #
         SymbolSpecs.TO_INTEGER:
             R(Text("parse::<i32>().unwrap()")),
@@ -84,18 +86,11 @@ class Rust(MergeRule):
             R(Text("for (%(a)s, TOKEN) in (0..%(n)d).enumerate() {}") + Key("left")),
         "enumerate for each [<a> <b>]":
             R(Text("for (%(a)s, %(b)s) in TOKEN.enumerate() {}") + Key("left")),
-        "bind [<mutability>]":
+        "(let|bind) [<mutability>]":
             R(Text("let %(mutability)s")),
         "of type":
             R(Text(": ")),
-        "[<signed>] integer [<ibits>]":
-            R(Text("%(signed)s%(bits)s ")),
-        "float [<fbits>]":
-            R(Text("f%(fbits)s ")),
-        "boolean":
-            R(Text("bool ")),
-        "string":
-            R(Text("String ")),
+        "with elements of": R(Text("<>") + Key("left")),
         "array [of] size <n>":
             R(Text("[TOKEN; %(n)d]")),
         "macro vector":
@@ -106,8 +101,12 @@ class Rust(MergeRule):
             R(Text("'")),
         "static":
             R(Text("static ")),
+        "struct": R(Text("struct ")),
+        "as": R(Text("as ")),
+        "implement": R(Text("impl ")),
         "self":
             R(Text("self")),
+        "super": R(Text("super")),
         "brace pan":
             R(Key("escape, escape, end, left, enter, enter, up, tab")),
         "enum":
@@ -118,8 +117,18 @@ class Rust(MergeRule):
             R(Text("async ")),
         "clone":
             R(Text(".clone()")),
-        "name space":
+        "name space|quad":
             R(Key("colon, colon")),
+        "public|publish": R(Text("pub ")),
+        "module": R(Text("mod ")),
+        "crate": R(Text("crate")),
+
+        # Data types
+        "boolean": R(Text("bool")),
+        "[<unsigned>] integer [<ibits>]": R(Text("%(unsigned)s%(ibits)s")),
+        "float [<fbits>]": R(Text("f%(fbits)s")),
+        "character": R(Text("char")),
+        "type <type_name>": R(Text("%(type_name)s")),
     }
 
     extras = [
@@ -127,19 +136,35 @@ class Rust(MergeRule):
             "eight": "8",
             "sixteen": "16",
             "thirty two": "32",
-            "sixty four": "64"
+            "sixty four": "64",
+            "one [hundred] twenty eight": "128",
+            "arch|size": "size",
         }),
         Choice("fbits", {
             "thirty two": "32",
-            "sixty four": "64"
+            "sixty four": "64",
         }),
-        Choice("signed", {"unsigned": "u"}),
+        Choice("type_name", {
+            "alias": "type ",
+            "self": "Self",
+            "string": "String",
+            "vector": "Vec",
+        }),
+        Choice("unsigned", {"unsigned": "u"}),
         Choice("mutability", {"mute ah | mute": "mut "}),
         ShortIntegerRef("n", 0, 1000),
         alphabet_support.get_alphabet_choice("a"),
         alphabet_support.get_alphabet_choice("b"),
     ]
-    defaults = {"bits": "32", "signed": "i", "mutability": "", "a": "i", "b": "j", "n": 1}
+    defaults = {
+        "fbits": "64",
+        "ibits": "32",
+        "unsigned": "i",
+        "mutability": "",
+        "a": "i",
+        "b": "j",
+        "n": 1
+    }
 
 
 def get_rule():

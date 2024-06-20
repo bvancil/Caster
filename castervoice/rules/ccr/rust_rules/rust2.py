@@ -7,25 +7,29 @@ from castervoice.lib.merge.state.short import R
 
 class RustNon(MappingRule):
     mapping = {
-        "macro format string":
-            R(Text("format!()") + Key("left")),
-        "macro panic":
-            R(Text("panic!()") + Key("left")),
-        "macro assertion":
-            R(Text("assert_eq!()") + Key("left")),
-        "macro debug":
-            R(Text("dbg!(&)") + Key("left")),
-        "ternary":
-            R(Text("if TOKEN == TOKEN { TOKEN } else { TOKEN }")),
-        "function [<return>]":
-            R(Text("fn TOKEN(TOKEN)%(return)s{}")),
-        "infinite loop":
-            R(Text("loop {}") + Key("left")),
-        "unwrap":
-            R(Text(".unwrap()"))
+        "fun <function_name>": R(Text("%(function_name)s()") + Key("left")),
+        "mac <macro_name>": R(Text("%(macro_name)s")),
     }
     extras = [
         Choice("return", {"return": " -> TOKEN "}),
+        Choice("function_name", {
+            "absolute value": "abs",
+            "assert equal": "assert_eq!",
+            "debug": "dbg!",
+            "drop": "drop",
+            "format": "format!",
+            "from": "from",
+            "length": "len",
+            "new": "new",
+            "panic": "panic!",
+            "print": "print!",
+            "print line": "println!",
+            "push": "push",
+            "unwrap": "unwrap",
+        }),
+        Choice("macro_name", {
+            "vector": "vec!",
+        }),
     ]
     defaults = {"return": " "}
 
