@@ -2,7 +2,7 @@
 main Caster module
 Created on Jun 29, 2014
 '''
-
+import logging
 import importlib
 from dragonfly import get_engine, get_current_engine
 from castervoice.lib import control
@@ -37,8 +37,11 @@ if settings.SETTINGS["sikuli"]["enabled"]:
     from castervoice.asynch.sikuli import sikuli_controller
     sikuli_controller.get_instance().bootstrap_start_server_proxy()
 
-if get_current_engine().name != "text":
-    hud_support.start_hud()
+try:
+    if get_current_engine().name != "text":
+        hud_support.start_hud()
+except ImportError:
+    pass  # HUD is not available
 
 dh = printer.get_delegating_handler()
 dh.register_handler(hud_support.HudPrintMessageHandler()) # After hud starts

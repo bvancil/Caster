@@ -1,12 +1,25 @@
 import os
 import sys
+import threading
 
-from xmlrpc.server import SimpleXMLRPCServer
-from tkinter import Label, Text
-import tkinter as tk
+import dragonfly
 
-import signal, os
-from threading import Timer
+# TODO: Remove this try wrapper when CI server supports Qt
+try:
+    import PySide2.QtCore
+    from PySide2.QtWidgets import QApplication
+    from PySide2.QtWidgets import QCheckBox
+    from PySide2.QtWidgets import QDialog
+    from PySide2.QtWidgets import QFileDialog
+    from PySide2.QtWidgets import QFormLayout
+    from PySide2.QtWidgets import QLabel
+    from PySide2.QtWidgets import QLineEdit
+    from PySide2.QtWidgets import QScrollArea
+    from PySide2.QtWidgets import QTextEdit
+    from PySide2.QtWidgets import QVBoxLayout
+    from PySide2.QtWidgets import QWidget
+except ImportError:
+    sys.exit(0)
 
 try:  # Style C -- may be imported into Caster, or externally
     BASE_PATH = os.path.realpath(__file__).rsplit(os.path.sep + "castervoice", 1)[0]

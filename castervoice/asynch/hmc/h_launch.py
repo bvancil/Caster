@@ -2,7 +2,7 @@ import os
 import subprocess
 import sys
 
-from xmlrpc.server import SimpleXMLRPCServer
+from xmlrpc.server import SimpleXMLRPCServer  # pylint: disable=no-name-in-module
 
 try:  # Style C -- may be imported into Caster, or externally
     BASE_PATH = os.path.realpath(__file__).rsplit(os.path.sep + "castervoice", 1)[0]
@@ -52,9 +52,13 @@ def _get_title(hmc_type):
 
 
 def main():
-    import PySide2.QtWidgets
-    from castervoice.asynch.hmc.homunculus import Homunculus
-    from castervoice.lib.merge.communication import Communicator
+    # TODO: Remove this try wrapper when CI server supports Qt
+    try:
+        import PySide2.QtWidgets
+        from castervoice.asynch.hmc.homunculus import Homunculus
+        from castervoice.lib.merge.communication import Communicator
+    except ImportError:
+        sys.exit(0)
     server_address = (Communicator.LOCALHOST, Communicator().com_registry["hmc"])
     # Enabled by default logging causes RPC to malfunction when the GUI runs on
     # pythonw.  Explicitly disable logging for the XML server.

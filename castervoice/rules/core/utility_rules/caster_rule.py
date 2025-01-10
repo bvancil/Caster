@@ -42,15 +42,15 @@ class CasterRule(MappingRule):
             R(Function(lambda: control.nexus().set_ccr_active(True))),
         "disable (c c r|ccr)":
             R(Function(lambda: control.nexus().set_ccr_active(False))),
-        "show caster hud":
+        "show hud":
             R(Function(show_hud), rdescript="Show the HUD window"),
-        "hide caster hud":
+        "hide hud":
             R(Function(hide_hud), rdescript="Hide the HUD window"),
-        "show caster rules":
+        "show rules":
             R(Function(show_rules), rdescript="Open HUD frame with the list of active rules"),
-        "hide caster rules":
+        "hide rules":
             R(Function(hide_rules), rdescript="Hide the list of active rules"),
-        "clear caster hud":
+        "clear hud":
             R(Function(clear_hud), rdescript="Clear output the HUD window"),
     }
 
