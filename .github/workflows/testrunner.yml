@@ -3,7 +3,7 @@ name: Caster Lint/Unit Tests
 on: [push, pull_request]
 
 jobs:
-  python-windows-3-10-x:
+  python-windows-3-8-x:
         name: python 3 windows
         runs-on: windows-latest
         strategy:
