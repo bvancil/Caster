@@ -24,6 +24,7 @@ class VSCodeNonCcrRule(MappingRule):
     """
     https://code.visualstudio.com/docs/getstarted/keybindings
     https://code.visualstudio.com/shortcuts/keyboard-shortcuts-windows.pdf
+    or press ctrl+k, ctrl+r in VS Code
     """
     mapping = {
         # General
